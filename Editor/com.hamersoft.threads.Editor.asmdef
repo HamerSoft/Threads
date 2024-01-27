@@ -1,0 +1,18 @@
+{
+    "name": "com.hamersoft.threads.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e9c539bce7de75e43b4bfeb7ee81cc0c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

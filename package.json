@@ -1,0 +1,29 @@
+{
+  "name": "com.hamersoft.threads",
+  "version": "0.0.0",
+  "displayName": "Threads",
+  "description": "A library with common patterns to work with threads in Unity3D.",
+  "unity": "2021.3",
+  "documentationUrl": "https://hamersoft.github.io/Threads/",
+  "changelogUrl": "https://github.com/HamerSoft/Threads/releases",
+  "licensesUrl": "License.md",
+  "keywords": [
+    "HamerSoft",
+    "Unity3D",
+    "Threads",
+    "Async",
+    "Dispatcher",
+    "Synchronize",
+    "Parallel",
+    "Multi-threaded",
+    "Awaiters"
+  ],
+  "author": {
+    "name": "HamerSoft",
+    "email": "r.hamers@hamersoft.com",
+    "url": "https://hamersoft.com"
+  },
+  "type": "library",
+  "dependencies": {
+  }
+}

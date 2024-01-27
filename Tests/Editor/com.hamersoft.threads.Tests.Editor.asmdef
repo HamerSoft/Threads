@@ -1,0 +1,21 @@
+{
+    "name": "com.hamersoft.threads.Tests.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e9c539bce7de75e43b4bfeb7ee81cc0c",
+        "GUID:107b24b1ecd65dd4b884b4b5a394cd8c",
+        "GUID:0acc523941302664db1f4e527237feb3",
+        "GUID:7c04f0dfa9243c04681a55d90d3ff3fc"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
