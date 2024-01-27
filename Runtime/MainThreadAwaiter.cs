@@ -2,8 +2,11 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
+    /// <summary>
+    /// An awaitable to synchronize to the main thread
+    /// </summary>
     public class MainThreadAwaiter : INotifyCompletion
     {
         private readonly MainThread _mainThread;
@@ -11,11 +14,17 @@ namespace Hamersoft.Threads
         private Exception _exception;
         private Action _continuation;
 
+        /// <summary>
+        /// Flag if the awaitable is complete
+        /// </summary>
         public bool IsCompleted
         {
             get { return _isDone; }
         }
 
+        /// <summary>
+        /// Get the result of the awaitable
+        /// </summary>
         public void GetResult()
         {
             if (_exception != null)
@@ -29,6 +38,10 @@ namespace Hamersoft.Threads
             _mainThread = mainThread;
         }
 
+        /// <summary>
+        /// Complete the awaitable
+        /// </summary>
+        /// <param name="e">optional exception</param>
         public void Complete(Exception e)
         {
             _isDone = true;
@@ -40,7 +53,11 @@ namespace Hamersoft.Threads
             }
         }
 
-        void INotifyCompletion.OnCompleted(Action continuation)
+        /// <summary>
+        /// Function invoked when completed
+        /// </summary>
+        /// <param name="continuation">continuation action</param>
+        public void OnCompleted(Action continuation)
         {
             _continuation = continuation;
         }

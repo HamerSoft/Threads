@@ -1,13 +1,13 @@
 ﻿using UnityEditor;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads.Editor
 {
-    [InitializeOnLoad]
-    public static class EditorDispatcher
+    static class EditorDispatcher
     {
-        private static readonly EditorUpdateLoop _updater;
-
-        static EditorDispatcher()
+        private static EditorUpdateLoop _updater;
+        
+        [InitializeOnLoadMethod]
+        private static void Start()
         {
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (_updater == null)
