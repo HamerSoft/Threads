@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
     internal class Runner
     {
@@ -10,7 +10,7 @@ namespace Hamersoft.Threads
         private MainThread _mainThread;
         private ConcurrentQueue<Action> _actionQueue;
 
-        public Runner(IUpdater updater)
+        internal Runner(IUpdater updater)
         {
             _mainThread = new MainThread();
             _actionQueue = new ConcurrentQueue<Action>();
@@ -19,12 +19,12 @@ namespace Hamersoft.Threads
             _updater.Updated += OnUpdated;
         }
 
-        public void Post(Action function)
+        internal void Post(Action function)
         {
             _actionQueue.Enqueue(function);
         }
 
-        public Task PostAsync(Action function)
+        internal Task PostAsync(Action function)
         {
             var taskCompletionSource = new TaskCompletionSource<bool>();
 
@@ -45,20 +45,20 @@ namespace Hamersoft.Threads
             return taskCompletionSource.Task;
         }
 
-        public Task<IDispatchResult<TResult, Exception>> PostAsync<TResult>(Func<TResult> function)
+        internal Task<IDispatchResult<TResult>> PostAsync<TResult>(Func<TResult> function)
         {
-            var taskCompletionSource = new TaskCompletionSource<IDispatchResult<TResult, Exception>>();
+            var taskCompletionSource = new TaskCompletionSource<IDispatchResult<TResult>>();
 
             void SafeAction()
             {
                 try
                 {
                     var result = function();
-                    taskCompletionSource.TrySetResult(new DispatchResult<TResult, Exception>(result));
+                    taskCompletionSource.TrySetResult(new DispatchResult<TResult>(result));
                 }
                 catch (Exception e)
                 {
-                    taskCompletionSource.TrySetResult(new DispatchResult<TResult, Exception>(e));
+                    taskCompletionSource.TrySetResult(new DispatchResult<TResult>(e));
                 }
             }
 
@@ -66,11 +66,16 @@ namespace Hamersoft.Threads
             return taskCompletionSource.Task;
         }
 
-        public MainThreadSync ToMainThread()
+        internal MainThreadSync ToMainThread()
         {
             return new MainThreadSync(_mainThread);
         }
 
+        internal BackgroundThreadSync ToBackgroundThread()
+        {
+            return new BackgroundThreadSync();
+        }
+        
         private void OnUpdated()
         {
             while (_actionQueue.TryDequeue(out var action))
@@ -84,7 +89,7 @@ namespace Hamersoft.Threads
             Stop();
         }
 
-        public void Stop()
+        internal void Stop()
         {
             _mainThread = null;
             _actionQueue.Clear();

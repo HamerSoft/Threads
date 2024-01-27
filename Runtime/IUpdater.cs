@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
     internal interface IUpdater
     {
