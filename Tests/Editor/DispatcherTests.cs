@@ -77,11 +77,24 @@ namespace HamerSoft.Threads.Tests.Editor
             Dispatcher.Start(_updater);
             await Task.Run(async () =>
             {
-                Debug.Log($"MainThread = {System.Environment.CurrentManagedThreadId == _mainThread}! ");
-                Assert.That(System.Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Debug.Log($"MainThread = {Environment.CurrentManagedThreadId == _mainThread}! ");
+                Assert.That(Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
                 await Dispatcher.ToMainThread();
-                Assert.That(System.Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
-                Debug.Log($"MainThread = {System.Environment.CurrentManagedThreadId == _mainThread}! ");
+                Assert.That(Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
+                Debug.Log($"MainThread = {Environment.CurrentManagedThreadId == _mainThread}! ");
+            });
+        }
+
+        [Test]
+        public async Task ToBackgroundThread_Runs_On_Thread_NotEqual_To_MainThreadId()
+        {
+            Dispatcher.Start(_updater);
+            await Task.Run(async () =>
+            {
+                await Dispatcher.ToMainThread();
+                Assert.That(Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
+                await Dispatcher.ToBackgroundThread();
+                Assert.That(Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
             });
         }
 

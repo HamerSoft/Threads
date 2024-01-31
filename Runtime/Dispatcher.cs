@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -72,6 +73,16 @@ namespace HamerSoft.Threads
         public static MainThreadSync ToMainThread()
         {
             return _runner.ToMainThread();
+        }
+
+        /// <summary>
+        /// Synchronize a thread to some background-thread
+        /// <remarks>This will mostly be used to sync from the main-thread to some background thread for further processing that doesn't need UnityEngine access.</remarks>
+        /// </summary>
+        /// <returns>an awaiter to synchronize to some background thread</returns>
+        public static BackgroundThreadSync ToBackgroundThread()
+        {
+            return _runner.ToBackgroundThread();
         }
     }
 }

@@ -71,6 +71,11 @@ namespace HamerSoft.Threads
             return new MainThreadSync(_mainThread);
         }
 
+        internal BackgroundThreadSync ToBackgroundThread()
+        {
+            return new BackgroundThreadSync();
+        }
+        
         private void OnUpdated()
         {
             while (_actionQueue.TryDequeue(out var action))
