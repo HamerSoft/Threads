@@ -1,0 +1,112 @@
+name: Test, Generate Documentation, Deploy GH-Pages and Make Release
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - master
+
+env:
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+
+jobs:
+  testRunner:
+    name: Test in ${{ matrix.testMode }} ✨
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        testMode:
+          - EditMode
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Restructure directory
+        run: bash ${GITHUB_WORKSPACE}/.github/scripts/restructure-dir.sh
+
+      - name: Run tests
+        uses: game-ci/unity-test-runner@v4
+        id: testRunner
+        with:
+          unityVersion: 2021.3.9f1
+          testMode: ${{ matrix.testMode }}
+          checkName: ${{ matrix.testMode }} test results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Test results (${{ matrix.testMode }})
+          path: ${{ steps.testRunner.outputs.artifactsPath }}
+
+      - name: Revert Directory
+        run: bash ${GITHUB_WORKSPACE}/.github/scripts/revert-dir.sh
+  
+  deployPages:
+    needs: testRunner
+    name: Deploy to Github Pages 🚀
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - name: Install DoxyGen
+        run: bash ${GITHUB_WORKSPACE}/.github/scripts/install-doxygen.sh
+
+      - name: Generate Docs
+        run: bash ${GITHUB_WORKSPACE}/.github/scripts/generate-docs.sh
+
+      - name: Move offline Docs
+        run: bash ${GITHUB_WORKSPACE}/.github/scripts/move-offline-docs.sh
+
+      - name: Add offline Documentation to Repo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: update offline docs"
+          file_pattern: '*Docs~/*.pdf'
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: Docs/html
+  
+  createRelease:
+    needs: deployPages
+    name: Create Release
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: conventional changelog action
+        id: changelog
+        # https://github.com/TriPSs/conventional-changelog-action
+        uses: TriPSs/conventional-changelog-action@latest
+        with:
+          # you can also create separate token to trace action
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: create release
+        # https://github.com/actions/create-release
+        uses: softprops/action-gh-release@v1
+        if: ${{steps.changelog.outputs.skipped == 'false'}}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.changelog.outputs.tag }}
+          name: ${{ steps.changelog.outputs.tag }}
+          body: ${{steps.changelog.outputs.clean_changelog}}
+          draft: false
+          prerelease: false
+      

@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
-    public class UpdateLoop : MonoBehaviour, IUpdater
+    internal class UpdateLoop : MonoBehaviour, IUpdater
     {
         public event Action Updated, Stopped;
 

@@ -1,32 +1,25 @@
 ﻿using System;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
-    public interface IDispatchResult<out TResult, out TException> where TException : Exception
+    internal class DispatchResult<TResult> : IDispatchResult<TResult>
     {
-        TResult Result { get; }
-        TException Exception { get; }
-        string Message { get; }
-    }
-
-    internal class DispatchResult<TResult, TException> : IDispatchResult<TResult, TException>
-        where TException : Exception
-    {
+        /// <inheritdoc/>
         public TResult Result { get; internal set; }
-        public TException Exception { get; internal set; }
-        public string Message { get; internal set; }
+        /// <inheritdoc/>
+        public bool Succeeded => Exception == null;
+        /// <inheritdoc/>
+        public Exception Exception { get; internal set; }
 
-        public DispatchResult(TResult result)
+        internal DispatchResult(TResult result)
         {
             Result = result;
-            Exception = default;
-            Message = null;
+            Exception = null;
         }
 
-        public DispatchResult(TException exception, string message = null)
+        internal DispatchResult(Exception exception)
         {
             Exception = exception;
-            Message = message;
             Result = default;
         }
     }

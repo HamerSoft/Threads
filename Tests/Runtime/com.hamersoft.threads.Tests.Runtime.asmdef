@@ -1,0 +1,18 @@
+{
+    "name": "com.hamersoft.threads.Tests.Runtime",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e9c539bce7de75e43b4bfeb7ee81cc0c",
+        "GUID:27619889b8ba8c24980f49ee34dbb44a",
+        "GUID:e9745f6a32442194c8dc5a43e9ab86f9"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

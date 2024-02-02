@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads
 {
     internal sealed class MainThread
     {

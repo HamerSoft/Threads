@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEditor;
 
-namespace Hamersoft.Threads
+namespace HamerSoft.Threads.Editor
 {
     internal class EditorUpdateLoop : IUpdater
     {
@@ -35,7 +35,7 @@ namespace Hamersoft.Threads
 
         private void OnUpdated()
         {
-           Updated?.Invoke();
+            Updated?.Invoke();
         }
     }
 }
