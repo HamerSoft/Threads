@@ -17,7 +17,7 @@ namespace HamerSoft.Threads.Tests.Editor
         public void SetUp()
         {
             _updater = new EditorUpdateLoop();
-            _mainThread = Environment.CurrentManagedThreadId;
+            _mainThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
         }
 
         [Test]
@@ -77,11 +77,9 @@ namespace HamerSoft.Threads.Tests.Editor
             Dispatcher.Start(_updater);
             await Task.Run(async () =>
             {
-                Debug.Log($"MainThread = {Environment.CurrentManagedThreadId == _mainThread}! ");
-                Assert.That(Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
                 await Dispatcher.ToMainThread();
-                Assert.That(Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
-                Debug.Log($"MainThread = {Environment.CurrentManagedThreadId == _mainThread}! ");
+                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
             });
         }
 
@@ -92,9 +90,9 @@ namespace HamerSoft.Threads.Tests.Editor
             await Task.Run(async () =>
             {
                 await Dispatcher.ToMainThread();
-                Assert.That(Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
+                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
                 await Dispatcher.ToBackgroundThread();
-                Assert.That(Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
             });
         }
 
