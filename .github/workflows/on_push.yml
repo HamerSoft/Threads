@@ -1,6 +1,7 @@
 name: Test Package when Pushed
 
-on: 
+on:
+  workflow_dispatch:
   push:
     branches:
       - '!master'
