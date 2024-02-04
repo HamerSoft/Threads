@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using HamerSoft.Threads.Editor;
 using NUnit.Framework;
@@ -12,12 +13,13 @@ namespace HamerSoft.Threads.Tests.Editor
     {
         private EditorUpdateLoop _updater;
         private int _mainThread;
+        private Thread _thead;
 
         [SetUp]
         public void SetUp()
         {
             _updater = new EditorUpdateLoop();
-            _mainThread = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            _mainThread = Thread.CurrentThread.ManagedThreadId;
         }
 
         [Test]
@@ -75,25 +77,33 @@ namespace HamerSoft.Threads.Tests.Editor
         public async Task ToMainThread_Runs_On_Thread_Equal_To_MainThreadId()
         {
             Dispatcher.Start(_updater);
-            await Task.Run(async () =>
+            _thead = new Thread(async () =>
             {
-                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
                 await Dispatcher.ToMainThread();
-                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
+                _thead?.Abort();
+                _thead = null;
             });
+            _thead.Start();
+            await Task.Delay(500);
         }
 
         [Test]
         public async Task ToBackgroundThread_Runs_On_Thread_NotEqual_To_MainThreadId()
         {
             Dispatcher.Start(_updater);
-            await Task.Run(async () =>
+            _thead = new Thread(async () =>
             {
                 await Dispatcher.ToMainThread();
-                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
                 await Dispatcher.ToBackgroundThread();
-                Assert.That(System.Threading.Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
+                _thead?.Abort();
+                _thead = null;
             });
+            _thead.Start();
+            await Task.Delay(500);
         }
 
         [Test]
@@ -115,6 +125,8 @@ namespace HamerSoft.Threads.Tests.Editor
         public void TearDown()
         {
             Dispatcher.Stop();
+            _thead?.Abort();
+            _thead = null;
             _updater = null;
         }
     }

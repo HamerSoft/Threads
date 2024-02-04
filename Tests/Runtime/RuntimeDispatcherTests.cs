@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace HamerSoft.Threads.Tests.Runtime
     public class RuntimeDispatcherTests
     {
         private int _mainThread;
+        private Thread _thead;
 
         [SetUp]
         public void SetUp()
@@ -73,15 +75,32 @@ namespace HamerSoft.Threads.Tests.Runtime
         [UnityTest]
         public IEnumerator ToMainThread_Runs_On_Thread_Equal_To_MainThreadId()
         {
-            Task.Run(async () =>
+            _thead = new Thread(async () =>
             {
-                Debug.Log($"MainThread = {System.Environment.CurrentManagedThreadId == _mainThread}! ");
-                Assert.That(System.Environment.CurrentManagedThreadId, Is.Not.EqualTo(_mainThread));
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
                 await Dispatcher.ToMainThread();
-                Assert.That(System.Environment.CurrentManagedThreadId, Is.EqualTo(_mainThread));
-                Debug.Log($"MainThread = {System.Environment.CurrentManagedThreadId == _mainThread}! ");
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
+                _thead?.Abort();
+                _thead = null;
             });
-            yield return null;
+            _thead.Start();
+            yield return new WaitForSeconds(1);
+        }
+        
+        [UnityTest]
+        public IEnumerator ToBackgroundThread_Runs_On_Thread_NotEqual_To_MainThreadId()
+        {
+            _thead = new Thread(async () =>
+            {
+                await Dispatcher.ToMainThread();
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.EqualTo(_mainThread));
+                await Dispatcher.ToBackgroundThread();
+                Assert.That(Thread.CurrentThread.ManagedThreadId, Is.Not.EqualTo(_mainThread));
+                _thead?.Abort();
+                _thead = null;
+            });
+            _thead.Start();
+            yield return new WaitForSeconds(1);
         }
 
         [UnityTest]
