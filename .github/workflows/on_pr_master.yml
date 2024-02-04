@@ -3,7 +3,7 @@ name: Test, Generate offline docs
 on:
   pull_request:
     types:
-      [opened, reopened, synchronize]
+      [opened, reopened]
     branches:
       master
 
