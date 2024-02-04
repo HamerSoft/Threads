@@ -1,4 +1,4 @@
-name: Test, Generate Documentation, Deploy GH-Pages and Make Release
+name: Test, Generate offline docs
 
 on:
   pull_request:
@@ -51,7 +51,7 @@ jobs:
       - name: Revert Directory
         run: bash ${GITHUB_WORKSPACE}/.github/scripts/revert-dir.sh
   
-  deployPages:
+  generate-offline-docs:
     needs: testRunner
     name: Deploy to Github Pages 🚀
     if: github.event.pull_request.merged == true
