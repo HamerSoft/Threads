@@ -5,7 +5,7 @@ on:
     types:
       [opened, reopened, synchronize]
     branches:
-      - master
+      master
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
