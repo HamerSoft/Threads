@@ -3,7 +3,7 @@ name: Test, Generate Documentation, Deploy GH-Pages and Make Release
 on:
   pull_request:
     types:
-      - created
+      [opened, reopened, synchronize]
     branches:
       - master
 
