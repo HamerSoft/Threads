@@ -1,4 +1,4 @@
-name: Test Package when Pushed
+name: Test Package with manual trigger
 
 on:
   workflow_dispatch:
