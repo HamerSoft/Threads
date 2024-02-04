@@ -1,6 +1,6 @@
 {
   "name": "com.hamersoft.threads",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "displayName": "HamerSoft Threads",
   "description": "A library with common patterns to work with threads in Unity3D.",
   "unity": "2021.3",
@@ -24,6 +24,5 @@
     "url": "https://hamersoft.com"
   },
   "type": "library",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
