@@ -3,8 +3,8 @@ name: Test Package when Pushed
 on:
   workflow_dispatch:
   push:
-#    branches:
-#      - '!master'
+    branches:
+      - '!master'
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
