@@ -15,7 +15,6 @@ env:
 jobs:
   testRunner:
     name: Test in ${{ matrix.testMode }} ✨
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -52,9 +51,8 @@ jobs:
         run: bash ${GITHUB_WORKSPACE}/.github/scripts/revert-dir.sh
   
   generate-offline-docs:
+    name: Generate Offline docs
     needs: testRunner
-    name: Deploy to Github Pages 🚀
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
       # Give the default GITHUB_TOKEN write permission to commit and push the
