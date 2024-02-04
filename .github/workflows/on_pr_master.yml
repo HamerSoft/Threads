@@ -3,12 +3,14 @@ name: Test, Generate Documentation, Deploy GH-Pages and Make Release
 on:
   pull_request:
     types:
-      - closed
+      - created
     branches:
       - master
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 
 jobs:
   testRunner:
@@ -78,40 +80,3 @@ jobs:
         with:
           commit_message: "ci: update offline docs"
           file_pattern: '*Docs~/*.pdf'
-
-      - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
-        with:
-          branch: gh-pages
-          folder: Docs/html
-  
-  createRelease:
-    needs: deployPages
-    name: Create Release
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-
-      - name: conventional changelog action
-        id: changelog
-        # https://github.com/TriPSs/conventional-changelog-action
-        uses: TriPSs/conventional-changelog-action@latest
-        with:
-          # you can also create separate token to trace action
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: create release
-        # https://github.com/actions/create-release
-        uses: softprops/action-gh-release@v1
-        if: ${{steps.changelog.outputs.skipped == 'false'}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          name: ${{ steps.changelog.outputs.tag }}
-          body: ${{steps.changelog.outputs.clean_changelog}}
-          draft: false
-          prerelease: false
-      
