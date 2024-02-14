@@ -12,6 +12,13 @@ namespace HamerSoft.Threads.Editor
         {
             EditorApplication.update += OnUpdated;
             EditorApplication.playModeStateChanged += EditorApplicationOnplayModeStateChanged;
+            Dispatcher.Start(this);
+        }
+
+        ~EditorUpdateLoop()
+        {
+            EditorApplication.update -= OnUpdated;
+            EditorApplication.playModeStateChanged -= EditorApplicationOnplayModeStateChanged;   
         }
 
         private void EditorApplicationOnplayModeStateChanged(PlayModeStateChange state)

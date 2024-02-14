@@ -32,7 +32,7 @@ Task.Run(async () => {
     // so we can access UnityEngine code 
     // without getting an exception! 
     var myGameObject = Object.Instantiate(myPrefab);
-    // F*cking Awesome XD!!!
+    // Fricking Awesome XD!!!
     
     // We can also await a background thread
     await Dispatcher.ToBackgroundThread();
