@@ -24,5 +24,7 @@
     "url": "https://hamersoft.com"
   },
   "type": "library",
-  "dependencies": {}
+  "dependencies": {
+    "com.unity.test-framework": "1.4.2"
+  }
 }
